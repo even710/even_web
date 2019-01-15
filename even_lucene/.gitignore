@@ -17,6 +17,7 @@
 *.ipr
 *.mvn
 
+
 ### NetBeans ###
 /nbproject/private/
 /build/
@@ -24,3 +25,6 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+/target
+/out
+/logs

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+    <!--配置connection-factory，指定rabbit server参数-->
+    <rabbit:connection-factory id="connectionFactory" virtual-host="/" username="even" password="123"
+                               host="localhost" port="5672" channel-cache-size="100"/>
+    <!--通过指定admin信息，当前producer中的exchange和queue在rabbitmq服务器上自动生成-->
+    <rabbit:admin id="connectAdmin" connection-factory="connectionFactory"/>
+
+    <!--定义direct queue durable代表队列是否持久化。auto-delete代表消息用完后队列会删除,exclusive表明队列是否是连接独有的-->
+    <rabbit:queue name="queueTest" declared-by="connectAdmin"/>
+
+    <!--定义接收者-->
+    <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual">
+        <rabbit:listener ref="directMessageListener" queues="queueTest"/>
+    </rabbit:listener-container>
+
+    <!--配置connection-factory，指定rabbit server参数-->
+    <rabbit:connection-factory id="connectionFactory1" virtual-host="/" username="even" password="123"
+                               host="localhost" port="5672" channel-cache-size="100"/>
+    <!--通过指定admin信息，当前producer中的exchange和queue在rabbitmq服务器上自动生成-->
+    <rabbit:admin id="connectTopicAdmin" connection-factory="connectionFactory1"/>
+    <!--定义topic queue-->
+    <rabbit:queue name="queueTopic" declared-by="connectTopicAdmin"/>
+
+    <!--定义topic exchange，绑定queueTopic-->
+    <rabbit:topic-exchange name="exchangeTopic"
+                           declared-by="connectTopicAdmin">
+        <rabbit:bindings>
+            <rabbit:binding pattern="topic.#" queue="queueTopic"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <!--定义rabbit template用于数据的接收和发送-->
+    <rabbit:template id="topicTemplate" connection-factory="connectionFactory1" exchange="exchangeTopic"/>
+</beans>

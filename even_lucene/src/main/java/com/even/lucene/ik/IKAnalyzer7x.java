@@ -9,39 +9,37 @@ import java.io.IOException;
 import java.io.StringReader;
 
 /**
- * des:
- * author: Even
- * create date:2019/1/14
+ * Project Name: Web_App
+ * Des:使用IK分词需要修改IKAnalyzer，实例化IKAnalyzer后即可使用
+ * Created by Even on 2019/1/14
  */
 public class IKAnalyzer7x extends Analyzer {
+    private boolean userSmart;
 
-    private boolean useSmart;
-
-    public boolean isUseSmart() {
-        return useSmart;
+    public boolean isUserSmart() {
+        return userSmart;
     }
 
-    public void setUseSmart(boolean useSmart) {
-        this.useSmart = useSmart;
+    public void setUserSmart(boolean userSmart) {
+        this.userSmart = userSmart;
     }
 
     public IKAnalyzer7x() {
-        this(false);
+        this(false);//默认细粒度切分算法
     }
 
-    public IKAnalyzer7x(boolean useSmart) {
+    public IKAnalyzer7x(boolean userSmart) {
         super();
-        this.useSmart = useSmart;
+        this.userSmart = userSmart;
     }
 
     @Override
     protected TokenStreamComponents createComponents(String s) {
-
-        Tokenizer tokenizer = new IKTokenizer7x(this.isUseSmart());
-        return new TokenStreamComponents(tokenizer);
+        Tokenizer _IKTokenizer = new IKTokenizer7x(this.isUserSmart());
+        return new TokenStreamComponents(_IKTokenizer);
     }
 
-    private static String string = "厉害了我的哥！中国环保部门即将发布治理北京雾霾的方法！";
+    private static String string = "厉害了我的哥！中国环保部门即将发布治理北京雾霾的方法!";
 
     public static void main(String[] args) throws IOException {
         Analyzer analyzer = new IKAnalyzer7x(true);
@@ -49,10 +47,9 @@ public class IKAnalyzer7x extends Analyzer {
         TokenStream tokenStream = analyzer.tokenStream(string, stringReader);
         tokenStream.reset();
         CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
-        System.out.println("分词结果：");
         while (tokenStream.incrementToken())
             System.out.print(attribute.toString() + "|");
-        System.out.println();
+        System.out.println("");
         analyzer.close();
     }
 }

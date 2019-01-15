@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.ssm.rabbit"/>
+    <!--配置connection-factory，指定rabbit server参数-->
+    <rabbit:connection-factory id="connectionFactory" virtual-host="/" username="even" password="123"
+                               host="localhost" port="5672" publisher-confirms="true"/>
+    <!--通过指定admin信息，当前producer中的exchange和queue在rabbitmq服务器上自动生成-->
+    <rabbit:admin id="connectAdmin" connection-factory="connectionFactory"/>
+
+    <!--定义direct queue-->
+    <rabbit:queue name="queueTest" durable="true"/>
+
+    <!--定义direct exchange，绑定queueTest-->
+    <rabbit:direct-exchange name="exchangeTest" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="queueTest" key="queueTestKey"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!--定义rabbit template用于数据的接收和发送-->
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="exchangeTest"
+                     confirm-callback="confirmCallBackListener" return-callback="returnCallBackListener"
+                     mandatory="true"/>
+
+    <!--&lt;!&ndash;定义topic queue&ndash;&gt;-->
+    <!--<rabbit:queue name="queueTopic" durable="true" auto-delete="false" exclusive="false" declared-by="connectAdmin"/>-->
+
+    <!--&lt;!&ndash;定义topic exchange，绑定queueTopic&ndash;&gt;-->
+    <!--<rabbit:topic-exchange name="exchangeTopic" durable="true" auto-delete="false"-->
+    <!--declared-by="connectAdmin">-->
+    <!--<rabbit:bindings>-->
+    <!--<rabbit:binding pattern="topic.#" queue="queueTopic"></rabbit:binding>-->
+    <!--</rabbit:bindings>-->
+    <!--</rabbit:topic-exchange>-->
+
+    <!--&lt;!&ndash;定义rabbit template用于数据的接收和发送&ndash;&gt;-->
+    <!--<rabbit:template id="topicTemplate" connection-factory="connectionFactory" exchange="exchangeTopic"/>-->
+</beans>

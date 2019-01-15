@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="callSettersOnNulls" value="true"/>
+        <!-- 打开延迟加载的开关 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 将积极加载改为消息加载即按需加载,不会加载关联表的所有字段，以提高性能-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <!-- 开启二级缓存 ，开启，容易导致脏数据 -->
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+</configuration>

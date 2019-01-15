@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!-- 此为服务接口的别名，要求通俗易懂 -->
+    <dubbo:application name="ssmSer-C"/>
+    <!-- zookeeper的服务器host:post，在window7安装docker，实际上docker是运行在一个虚拟机上的，因此，ip是虚拟机的ip而非window本机的ip -->
+    <dubbo:registry protocol="zookeeper" address="192.168.99.100:2182,192.168.99.100:2183"/>
+    <!-- 在20880端口上发布dubbo协议的服务，此端口可自定义 -->
+    <dubbo:protocol name="dubbo" port="20880"/>
+    <!-- 服务接口的实现，类中加了@Service注解后，这里实际不需要再添加 -->
+    <bean id="userService" class="com.ssm.ser.service.MailServiceImpl"/>
+    <!-- 服务接口 -->
+    <dubbo:service interface="com.ssm.api.service.MailService" ref="mailService"/>
+</beans>

@@ -1,0 +1,114 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<!-- EhCache XML configuration file used for Shiro spring sample application -->
+<ehcache>
+
+    <!-- Sets the path to the directory where cache .data files are created.
+
+If the path is a Java System Property it is replaced by
+its value in the running VM.
+
+The following properties are translated:
+user.home - User's home directory
+user.dir - User's current working directory
+java.io.tmpdir - Default temp file path -->
+    <!--
+    磁盘存储:将缓存中暂时不使用的对象,转移到硬盘,类似于Windows系统的虚拟内存
+    path:指定在硬盘上存储对象的路径
+ -->
+    <diskStore path="java.io.tmpdir/shiro-spring-sample"/>
+
+
+    <!--Default Cache configuration. These will applied to caches programmatically created through
+    the CacheManager.
+
+    The following attributes are required:
+
+    maxElementsInMemory            - Sets the maximum number of objects that will be created in memory
+    eternal                        - Sets whether elements are eternal. If eternal,  timeouts are ignored and the
+                                     element is never expired.
+    overflowToDisk                 - Sets whether elements can overflow to disk when the in-memory cache
+                                     has reached the maxInMemory limit.
+
+    The following attributes are optional:
+    timeToIdleSeconds              - Sets the time to idle for an element before it expires.
+                                     i.e. The maximum amount of time between accesses before an element expires
+                                     Is only used if the element is not eternal.
+                                     Optional attribute. A value of 0 means that an Element can idle for infinity.
+                                     The default value is 0.
+    timeToLiveSeconds              - Sets the time to live for an element before it expires.
+                                     i.e. The maximum time between creation time and when an element expires.
+                                     Is only used if the element is not eternal.
+                                     Optional attribute. A value of 0 means that and Element can live for infinity.
+                                     The default value is 0.
+    diskPersistent                 - Whether the disk store persists between restarts of the Virtual Machine.
+                                     The default value is false.
+    diskExpiryThreadIntervalSeconds- The number of seconds between runs of the disk expiry thread. The default value
+                                     is 120 seconds.
+    memoryStoreEvictionPolicy      - Policy would be enforced upon reaching the maxElementsInMemory limit. Default
+                                     policy is Least Recently Used (specified as LRU). Other policies available -
+                                     First In First Out (specified as FIFO) and Less Frequently Used
+                                     (specified as LFU)
+    -->
+    <!--
+           defaultCache:默认的缓存配置信息,如果不加特殊说明,则所有对象按照此配置项处理
+           maxElementsInMemory:设置了缓存的上限,最多存储多少个记录对象
+           eternal:代表对象是否永不过期
+           timeToIdleSeconds:最大的发呆时间
+           timeToLiveSeconds:最大的存活时间
+           overflowToDisk:是否允许对象被写入到磁盘
+        -->
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            overflowToDisk="false"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+    />
+
+    <!-- We want eternal="true" (with no timeToIdle or timeToLive settings) because Shiro manages session
+expirations explicitly.  If we set it to false and then set corresponding timeToIdle and timeToLive properties,
+ehcache would evict sessions without Shiro's knowledge, which would cause many problems
+(e.g. "My Shiro session timeout is 30 minutes - why isn't a session available after 2 minutes?"
+Answer - ehcache expired it due to the timeToIdle property set to 120 seconds.)
+
+diskPersistent=true since we want an enterprise session management feature - ability to use sessions after
+even after a JVM restart.  -->
+    <!--该shiro-activeSessionsCache值与设置的sessionDao的activeSessionsCacheName属性值一样-->
+    <!--
+    cache:为指定名称的对象进行缓存的特殊配置
+    name:指定对象的完整名
+ -->
+    <cache name="shiro-activeSessionsCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="true"
+           diskPersistent="true"
+           diskExpiryThreadIntervalSeconds="600"/>
+
+    <cache name="org.apache.shiro.realm.SimpleAccountRealm.authorization"
+           maxElementsInMemory="100"
+           eternal="false"
+           timeToLiveSeconds="600"
+           overflowToDisk="false"/>
+
+</ehcache>

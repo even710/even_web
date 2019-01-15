@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <!--Consumer别名-->
+    <dubbo:application name="ssmWeb-C"/>
+    <!--zookeeper服务器-->
+    <dubbo:registry protocol="zookeeper"
+                    address="192.168.99.100:2181,192.168.99.100:2182,192.168.99.100:2183"/>
+    <dubbo:annotation package="com.ssm.dubbo"/>
+    <!--<dubbo:reference interface="com.ssm.api.service.MailService" timeout="5000"/>-->
+    <dubbo:consumer timeout="5000"/>
+</beans>

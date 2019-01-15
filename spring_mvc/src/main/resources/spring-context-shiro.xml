@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <!-- 配置进行授权和认证的 Realm，要新增一个java类来实现，下面会有，class=包名.类名，init-methood是初始化的方法 -->
+    <bean id="loginAuthorRealm"
+          class="com.ssm.shiro.LoginAuthorRealm"
+          init-method="setCredentialMatcher">
+        <!--启用缓存，默认false；-->
+        <property name="cachingEnabled" value="true"/>
+        <!--启用身份验证缓存，即缓存AuthenticationInfo信息，默认false；-->
+        <!--在修改密码后需要对缓存进行清除，否则下次登录还是之前的密码-->
+        <property name="authenticationCachingEnabled" value="true"/>
+        <!--缓存AuthenticationInfo信息的缓存名称；-->
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <!--启用授权缓存，即缓存AuthorizationInfo信息，默认false；-->
+        <!--对权限进行修改后需要清除缓存，否则还是之前的权限-->
+        <!--<property name="authorizationCachingEnabled" value="true"/>-->
+        <!--缓存AuthorizationInfo信息的缓存名称；-->
+        <!--<property name="authorizationCacheName" value="authorizationCache"/>-->
+    </bean>
+    <!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
+    当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!--设置cookie名字，默认为JSESSIONID-->
+        <constructor-arg name="name" value="sid"/>
+        <!--设置cookie的域名，默认为空，即当前访问的域名-->
+        <!--<property name="domain" value=""/>-->
+        <!--设置cookie的路径，默认为空，即存储在域名根下-->
+        <!--<property name="path" value=""/>-->
+        <!--设置为true，则服务端不会暴露给客户端脚本代码，使用HttpOnly cookie有助于减少某些类型的跨站点脚本攻击；此特性需要实现了Servlet 2.5 MR6及以上版本的规范的Servlet容器支持-->
+        <property name="httpOnly" value="true"/>
+        <!--设置cookie过期时间，秒为单位，默认-1表示关闭浏览器时过期Cookie；-->
+        <property name="maxAge" value="180000"/>
+    </bean>
+
+    <!-- 定义授权缓存管理器 -->
+    <!--     <bean id="shiroCacheManager" class="com.thinkgem.jeesite.common.security.shiro.cache.SessionCacheManager" /> -->
+    <!--<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
+    <!--<property name="cacheManager" ref="cacheManager"/>-->
+    <!--</bean>-->
+
+    <!-- 会话ID生成器默认就是JavaUuidSessionIdGenerator，即java.util.UUID-->
+    <bean id="sessionIdGenerator"
+          class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+
+    <!--CachingSessionDAO提供了对开发者透明的会话缓存的功能，只需要设置相应的CacheManager即可；
+    MemorySessionDAO直接在内存中进行会话维护；
+    而EnterpriseCacheSessionDAO提供了缓存功能的会话维护，默认情况下使用MapCache实现，内部使用ConcurrentHashMap保存缓存的会话。
+    自定义sessionDao需继承CachingSessionDAO-->
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <!--设置Session缓存名字，默认就是shiro-activeSessionCache；-->
+        <property name="activeSessionsCacheName" value="shiro-activeSessionsCache"/>
+        <!--设置会话ID生成器-->
+        <!--<property name="sessionIdGenerator" ref="sessionIdGenerator"/>-->
+        <!--<property name="cacheManager" ref="shiroCacheManager"/>-->
+    </bean>
+
+    <!-- 会话验证调度器，sessionManager默认就是使用，用于定期的验证会话是否已过期；默认为ExecutorServiceSessionValidationScheduler-->
+    <!--quartz会话验证调度器适用于集群-->
+    <!--如果会话过多，则会影响性能，此时可以自定义会话调度器，继承默认为ExecutorServiceSessionValidationScheduler，分布获取会话并进行验证-->
+    <bean id="sessionValidationScheduler"
+          class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+        <!--设置调度时间间隔，单位毫秒，默认就是1小时；是默认为ExecutorServiceSessionValidationScheduler的参数-->
+        <!--<property name="interval" value="3600000"/>-->
+        <property name="sessionValidationInterval" value="3600000"/>
+        <!--设置会话验证调度器进行会话验证时的会话管理器；-->
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+
+    <!-- 自定义会话管理配置 -->
+    <!--DefaultSessionManager：DefaultSecurityManager使用的默认实现，用于JavaSE环境；
+    ServletContainerSessionManager：DefaultWebSecurityManager使用的默认实现，用于Web环境，其直接使用Servlet容器的会话；
+    DefaultWebSessionManager：用于Web环境的实现，可以替代ServletContainerSessionManager，自己维护着会话，直接废弃了Servlet容器的会话管理。-->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <!--设置全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期；-->
+        <property name="globalSessionTimeout" value="1800000"/>
+        <!-- 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话   -->
+        <property name="sessionValidationInterval" value="1800000"/>
+        <!--是否开启会话验证器，默认是开启的；-->
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <!--设置会话验证调度器，默认就是使用ExecutorServiceSessionValidationScheduler-->
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <!--是否启用/禁用Session Id Cookie，默认是启用的；如果禁用后将不会设置Session Id Cookie，
+        即默认使用了Servlet容器的JSESSIONID，且通过URL重写（URL中的“;JSESSIONID=id”部分）保存Session Id。-->
+        <property name="sessionIdCookieEnabled" value="true"/>
+    </bean>
+
+
+    <!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->
+    <bean id="lifecycleBeanPostProcessor"
+          class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--授权过滤器-->
+    <bean id="myAuthorizationFilter" class="com.ssm.filter.MyAuthorizationFilter"/>
+
+    <!-- 配置緩存管理器，需要导入ehcache.jar -->
+    <bean id="ehCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+    <!-- 指定 ehcache 的配置文件 -->
+    <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
+    </bean>
+
+    <!-- 配置 Shiro 的 SecurityManager Bean. -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!--用于会话存储-->
+        <property name="cacheManager" ref="ehCacheManager"/>
+        <!--会话管理，默认为ServletContainerSessionManager-->
+        <property name="sessionManager" ref="sessionManager"/>
+        <!--验证需要的Realm-->
+        <property name="realm" ref="loginAuthorRealm"/>
+    </bean>
+
+    <!-- 配置 ShiroFilter bean: 该 bean 的 id 必须和 web.xml 文件中配置的 shiro filter 的 name 一致  -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 装配 securityManager -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 配置登陆页面 -->
+        <property name="loginUrl" value="/index.jsp"/>
+        <!-- 登陆成功后的一面 -->
+        <property name="successUrl" value="/demo.jsp"/>
+        <property name="unauthorizedUrl" value="/index.jsp"/>
+        <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截.  -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!-- 配置登出: 使用 logout 过滤器 -->
+                /shiro-logout = logout
+                /shiro-* = anon
+                /** = myAuthorizationFilter
+            </value>
+        </property>
+    </bean>
+</beans>

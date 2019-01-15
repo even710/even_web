@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.even.lucene</groupId>
     <artifactId>even_lucene</artifactId>
-    <version>1.0</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>even_lucene</name>
     <description>Demo project for Spring Boot</description>
 
@@ -29,21 +29,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.wltea.analyzer</groupId>
-            <artifactId>IKAnalyzer</artifactId>
-            <version>2012_u6</version>
-        </dependency>
+        <!--lucene core start-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
             <version>7.6.0</version>
         </dependency>
+        <!--lucene分词-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-common</artifactId>
             <version>7.6.0</version>
         </dependency>
+        <!--导入中文智能分词包-->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers-smartcn</artifactId>
@@ -69,6 +67,14 @@
             <artifactId>lucene-memory</artifactId>
             <version>7.6.0</version>
         </dependency>
+        <!--lucene core end-->
+        <!--id analyzer start-->
+        <dependency>
+            <groupId>org.wltea.analyzer</groupId>
+            <artifactId>IKAnalyzer</artifactId>
+            <version>2012_u6</version>
+        </dependency>
+        <!--id analyzer end-->
     </dependencies>
 
     <build>
