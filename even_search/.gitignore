@@ -11,12 +11,10 @@
 .sts4-cache
 
 ### IntelliJ IDEA ###
-*.idea
+.idea
 *.iws
 *.iml
 *.ipr
-*.mvn
-
 
 ### NetBeans ###
 /nbproject/private/
@@ -25,7 +23,4 @@
 /dist/
 /nbdist/
 /.nb-gradle/
-/target
-/out
-/logs
-/files
+D:\ideaWorkspace\even_web\even_search\src\main\resources\files

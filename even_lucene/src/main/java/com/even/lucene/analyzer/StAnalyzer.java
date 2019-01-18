@@ -25,44 +25,44 @@ public class StAnalyzer {
     private static String strEn = "Dogs can not achieve a place, eyes can reach;";
 
     public static void main(String[] args) throws IOException {
-//        System.out.println("StandardAnalyzer对中文分词：");
-//        stdAnalyzer(strCh);
-//        System.out.println("StandardAnalyzer对英文分词：");
-//        stdAnalyzer(strEn);
+        System.out.println("StandardAnalyzer对中文分词：");
+        stdAnalyzer(strCh);
+        System.out.println("StandardAnalyzer对英文分词：");
+        stdAnalyzer(strEn);
 
         /*1，各类分词器比较*/
-//        Analyzer analyzer = null;
-//        analyzer = new StandardAnalyzer();
-//        System.out.println("标准分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new WhitespaceAnalyzer();
-//        System.out.println("空格分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new SimpleAnalyzer();
-//        System.out.println("简单分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new CJKAnalyzer();
-//        System.out.println("二分法分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new KeywordAnalyzer();
-//        System.out.println("关键词分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new StopAnalyzer();
-//        System.out.println("停用词分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new SmartChineseAnalyzer();
-//        System.out.println("中文智能分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
-//
-//        analyzer = new IKAnalyzer7x(true);//IK分词器的使用
-//        System.out.println("IK智能分词：" + analyzer.getClass());
-//        printAnalyzer(analyzer);
+        Analyzer analyzer = null;
+        analyzer = new StandardAnalyzer();
+        System.out.println("标准分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new WhitespaceAnalyzer();
+        System.out.println("空格分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new SimpleAnalyzer();
+        System.out.println("简单分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new CJKAnalyzer();
+        System.out.println("二分法分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new KeywordAnalyzer();
+        System.out.println("关键词分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new StopAnalyzer();
+        System.out.println("停用词分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new SmartChineseAnalyzer();
+        System.out.println("中文智能分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
+
+        analyzer = new IKAnalyzer7x(true);//IK分词器的使用
+        System.out.println("IK智能分词：" + analyzer.getClass());
+        printAnalyzer(analyzer);
 
         /*2，智能中文分词器比较*/
         String string = "公路局正在治理解放大道路面积水问题。";
@@ -100,13 +100,18 @@ public class StAnalyzer {
     }
 
     public static void printAnalyzer(Analyzer analyzer, String str) throws IOException {
+        /*1，获取Reader*/
         StringReader stringReader = new StringReader(str);
+        /*2，获取tokerStream流*/
         TokenStream tokenStream = analyzer.tokenStream(str, stringReader);
+        /*3，刷新一下流*/
         tokenStream.reset();
+        /*4，获取字符词项*/
         CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
+        /*5，遍历输出*/
         while (tokenStream.incrementToken())
             System.out.print(attribute.toString() + "|");
-        System.out.println("");
+        System.out.println();
         analyzer.close();
     }
 

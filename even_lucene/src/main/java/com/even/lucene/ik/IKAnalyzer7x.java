@@ -25,7 +25,7 @@ public class IKAnalyzer7x extends Analyzer {
     }
 
     public IKAnalyzer7x() {
-        this(false);//默认细粒度切分算法
+        this(true);//默认细粒度切分算法
     }
 
     public IKAnalyzer7x(boolean userSmart) {
