@@ -250,6 +250,7 @@
         <finalName>spring_mvc</finalName>
         <pluginManagement>
             <plugins>
+                <!--mybatis自动生成代码-->
                 <plugin>
                     <groupId>org.mybatis.generator</groupId>
                     <artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -262,11 +263,23 @@
                         </dependency>
                     </dependencies>
                     <configuration>
+                        <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
                         <overwrite>true</overwrite>
+                        <verbose>true</verbose>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
         <!--<plugins>-->
             <!--<plugin>-->

@@ -68,13 +68,13 @@
             <version>7.6.0</version>
         </dependency>
         <!--lucene core end-->
-        <!--id analyzer start-->
+        <!--ik analyzer start-->
         <dependency>
             <groupId>org.wltea.analyzer</groupId>
             <artifactId>IKAnalyzer</artifactId>
             <version>2012_u6</version>
         </dependency>
-        <!--id analyzer end-->
+        <!--ik analyzer end-->
         <dependency>
             <groupId>com.ssm.api</groupId>
             <artifactId>spring_mvc_api</artifactId>

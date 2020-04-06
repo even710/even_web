@@ -1,0 +1,12 @@
+<add>
+    <doc>
+        <field name="id">1</field>
+        <field name="screen_name">@even</field>
+        <field name="type">post</field>
+        <field name="timestamp">2019-01-22T15:22:00Z</field>
+        <field name="lang">cn</field>
+        <field name="user_id">3541564535</field>
+        <field name="favorites_count">3511321</field>
+        <field name="text">关于Solr的一些基础知识，我已写到CSDN博客中，有兴趣可以来了解一下。地址： https://blog.csdn.net/weixin_37581297</field>
+    </doc>
+</add>

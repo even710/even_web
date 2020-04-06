@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="default-config" version="1.6">
+    <fields>
+        <!--该字段是索引中文档的唯一识别符-->
+        <field name="id" type="string" indexed="true" stored="true" required="true"/>
+        <field name="screen_name" type="string" indexed="true" stored="true"/>
+        <field name="type" type="string" indexed="true" stored="true"/>
+        <field name="timestamp" type="string" indexed="true" stored="true"/>
+        <field name="lang" type="string" indexed="true" stored="true"/>
+        <!--该字段索引是为了排序，存储是为了显示-->
+        <field name="favorites_count" type="int" indexed="true" stored="true"/>
+        <!--该字段使用自定义的类型进行分析-->
+        <field name="text" type="text_microblog" indexed="true" stored="true"/>
+    </fields>
+
+</schema>

@@ -32,9 +32,9 @@ public class LoginController {
     public ModelAndView loginUser(User user) {
         ModelAndView mv = new ModelAndView();
 
-        System.out.println("userName:" + user.getUser() + ",password:" + user.getPassword());
+        System.out.println("userName:" + user.getUsername() + ",password:" + user.getPassword());
         if (userService.loginUser(user)) {
-            mv.addObject("userName", user.getUser());
+            mv.addObject("userName", user.getUsername());
             /*跳转到Demo页面*/
             mv.setViewName("Demo");
         } else
@@ -53,7 +53,7 @@ public class LoginController {
     public ModelAndView login(User user) {
         ModelAndView mv = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(user.getUser(), user.getPassword());
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         try {
             //执行认证操作.
             subject.login(token);
@@ -88,7 +88,7 @@ public class LoginController {
 //        }
         User user = new User();
         user.setPassword(userVO.getPassword());
-        user.setUser(userVO.getUser());
+        user.setUsername(userVO.getUser());
         md5Util.encryptPassword(user);
         userService.insertUser(user);
         mv.setViewName("redirect:/");

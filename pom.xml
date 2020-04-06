@@ -12,6 +12,7 @@
         <module>spring_mvc_api</module>
         <module>spring_mvc_ser</module>
         <module>spring_mvc_rabbit</module>
+        <module>even_solr</module>
     </modules>
     <packaging>pom</packaging>
 

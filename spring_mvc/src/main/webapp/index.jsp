@@ -17,6 +17,6 @@
     <input type="password" required="required" placeholder="密码" name="password" pattern="\S+"/>
     <button class="but" type="submit" style="cursor: pointer">登录</button>
 </form>
-<%--<h1>Hello World!</h1>--%>
+<h1>Hello World!</h1>
 </body>
 </html>

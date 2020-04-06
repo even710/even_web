@@ -10,13 +10,15 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 
 /**
  * des:
- * 1，Lucene文档需要依靠一个IndexWriter对象，创建IndexWriter需要两个参数，一个是IndexWriterConfig对象，该对象可以设置创建索引使用哪种分词器，另一个是索引的保存路径。
+ * 1，Lucene文档创建索引需要依靠一个IndexWriter对象，创建IndexWriter需要两个参数，一个是IndexWriterConfig对象，该对象可以设置创建索引使用哪种分词器，
+ * 另一个是索引的保存路径。
  *
  * 2，IndexWriter对象的addDocument()方法用于添加文档，该方法的参数为Document对象，IndexWriter对象一次可以添加多个文档，最后调用commit()方法生成索引
  *
@@ -55,8 +57,8 @@ public class CreateIndex {
 
         News news2 = new News();
         news2.setId(2);
-        news2.setTitle("北大迎来4380名尊重，农村学生700多人近年最多");
-        news2.setContent("昨天，北京大学迎来4380名来自全国各地及数十个国家的本科尊重。其中，农村学生共700余名，为近年最多...");
+        news2.setTitle("北大迎来4380名学生，农村学生700多人近年最多");
+        news2.setContent("昨天，北京大学迎来4380名来自全国各地及数十个国家的本科学生。其中，农村学生共700余名，为近年最多...");
         news2.setReply(3443);
 
         News news3 = new News();
@@ -69,15 +71,10 @@ public class CreateIndex {
         Analyzer analyzer = new IKAnalyzer7x(true);
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-        Directory directory = null;
         IndexWriter indexWriter = null;
-        Path indexdir = Paths.get("indexdir");
         Date startDate = new Date();
-//        if (Files.isReadable(indexdir)) {
-//            System.out.println("Document directory '" + indexdir.toAbsolutePath() + "' does not exist or is not readablee" +
-//                    ". please check the path");
-//            System.exit(1);
-//        }
+        Directory directory = null;
+        Path indexdir = Paths.get("indexdir");
         directory = FSDirectory.open(indexdir);
         indexWriter = new IndexWriter(directory, indexWriterConfig);
         /*设置新闻ID索引并存储*/

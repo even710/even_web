@@ -58,6 +58,7 @@ public class QueryParse {
         Analyzer analyzer = new IKAnalyzer7x(true);
         /*查询解析器*/
         QueryParser parser = new QueryParser(field, analyzer);
+        /*Operator.AND是解析器的操作，如，农村学生会被分成两个词项“农村”和“学生”，默认是找到“农村”或“学生”的文档，现在结果是同时包含两个词项的文档。*/
         parser.setDefaultOperator(QueryParser.Operator.AND);
         Query query = parser.parse("农村学生");
         /*TermQuery*/

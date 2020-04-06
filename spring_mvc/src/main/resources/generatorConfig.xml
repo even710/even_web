@@ -18,7 +18,7 @@
    <classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />
      -->
     <classPathEntry
-            location="F:\maven\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar"/>
+            location="D:\Sources\maven\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar"/>
 
     <!--
         context:生成一组对象的环境
@@ -54,7 +54,7 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/db_ssm"
                         userId="root"
-                        password="19940710">
+                        password="123456">
             <!-- 这里面可以设置property属性，每一个property属性都设置到配置的Driver上 -->
         </jdbcConnection>
 

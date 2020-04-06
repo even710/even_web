@@ -58,9 +58,9 @@ public class CreateIndexServiceImpl implements CreateIndexService {
     }
 
     public static void main(String[] args) throws TikaException, IOException, SAXException {
-//        CreateIndexServiceImpl createIndexService = new CreateIndexServiceImpl();
-//        createIndexService.searchIndex("Dubbo");
-        createIndex();
+        CreateIndexServiceImpl createIndexService = new CreateIndexServiceImpl();
+        createIndexService.searchIndex("Dubbo");
+//        createIndex();
     }
 
     public static void createIndex() throws TikaException, IOException, SAXException {

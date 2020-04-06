@@ -5,7 +5,6 @@ import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 
 /**
  * Project Name: Web_App
@@ -31,9 +30,9 @@ public class Md5Util {
     public void encryptPassword(User user) {
         user.setSalt(randomNumberGenerator.nextBytes().toHex());
         System.out.println(new SimpleHash(algorithmName, user.getPassword(), new Md5Hash(user
-                .getCredentialsSalt()), hashIterations));
+                .getSalt()), hashIterations));
         String newPassword = new SimpleHash(algorithmName, user.getPassword(), new Md5Hash(user
-                .getCredentialsSalt()), hashIterations).toHex();
+                .getSalt()), hashIterations).toHex();
         user.setPassword(newPassword);
     }
 }

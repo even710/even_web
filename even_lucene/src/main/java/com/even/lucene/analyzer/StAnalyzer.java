@@ -89,15 +89,20 @@ public class StAnalyzer {
     }
 
     public static void printAnalyzer(Analyzer analyzer) throws IOException {
+        /*1，获取Reader*/
         StringReader stringReader = new StringReader(strCh);
+        /*2，获取tokerStream流*/
         TokenStream tokenStream = analyzer.tokenStream(strCh, stringReader);
+        /*3，刷新一下流*/
         tokenStream.reset();
+        /*4，获取字符词项*/
         CharTermAttribute attribute = tokenStream.getAttribute(CharTermAttribute.class);
-        while (tokenStream.incrementToken())
-            System.out.print(attribute.toString() + "|");
+        /*5，遍历输出*/
+        while (tokenStream.incrementToken()) System.out.print(attribute.toString() + "|");
         System.out.println("");
         analyzer.close();
     }
+
 
     public static void printAnalyzer(Analyzer analyzer, String str) throws IOException {
         /*1，获取Reader*/
