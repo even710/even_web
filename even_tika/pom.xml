@@ -22,7 +22,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
         <!--tika文本内容抽取，tika-parsers已导入一个tika-core懈 start-->
